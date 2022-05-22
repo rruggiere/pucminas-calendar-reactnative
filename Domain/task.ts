@@ -1,5 +1,5 @@
 export type Task = {
     text: string;
-    hour: number;
-    minutes: number;   
+    hour: string;
+    minutes: string;   
 }

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCircleArrowRight, faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { faAngleRight, faTrash, faPlusCircle, faClock } from '@fortawesome/free-solid-svg-icons'
 import { Task } from '../../Domain/task';
 import { GetLocalTasks, UpdateValues } from '../../Service/storageService';
 import NewTask from '../NewTask';
@@ -17,31 +17,34 @@ function constructTasks(props: Props) {
     if (props.localTasks && props.localTasks.length > 0)
         props.localTasks.forEach(task => {
             tasksElements.push(
-                <View>
-                    <FontAwesomeIcon size={13} icon={faCircleArrowRight} />
-                    <Text>
-                        {task.text}
+                <View style={[styles.taskContainer]}>
+                    <FontAwesomeIcon size={13} icon={faAngleRight} />
+                    <Text style={styles.taskText}>
+                        {task.text.toLocaleUpperCase() + " "}
                     </Text>
-                    <Text>
-                        | {task.hour}:{task.minutes}
-                    </Text>
-                    <TouchableOpacity onPress={() => { removeTask(task, props); }}>
-                        <FontAwesomeIcon size={13} color={'red'} icon={faTrash} />
+                    <View style={[{ flexDirection: 'row' }, styles.center]}>
+                        <View style={{marginRight: 10}}><FontAwesomeIcon size={13} icon={faClock} /></View>
+                        <Text style={styles.taskText}>
+                            {task.hour}:{task.minutes}
+                        </Text>
+                    </View>
+                    <TouchableOpacity onPress={async () => { await removeTask(task, props); }}>
+                        <FontAwesomeIcon size={20} color={'red'} icon={faTrash} />
                     </TouchableOpacity>
                 </View>
             );
         });
 
     else
-        tasksElements.push(<View><Text>Nehuma atividade planejada para hoje!</Text></View>);
+        tasksElements.push(<View><Text style={styles.taskText}>Nehuma atividade planejada para hoje!</Text></View>);
 
     return tasksElements;
 }
 
-function removeTask(taskToRemove: Task, props: Props) {
+async function removeTask(taskToRemove: Task, props: Props) {
     const taskFiltered = props.localTasks.filter(taskItem => taskToRemove.text != taskItem.text);
-    UpdateValues(props.date, props.localTasks);
-    props.stateAaction(taskFiltered);
+    await UpdateValues(props.date, taskFiltered);
+    props.stateAaction(await GetLocalTasks(props.date));
 }
 
 export default function TasksList({ ...rest }: Props) {
@@ -57,16 +60,16 @@ export default function TasksList({ ...rest }: Props) {
     return (
         <View style={styles.container}>
             <View style={styles.center}>
-                <Text>
-                    Atividades para {dataFormatada}
+                <Text style={[{ fontSize: 15 , fontWeight: 'bold', marginBottom: 5 }]}>
+                    ATIVIDADES PARA {dataFormatada}
                 </Text>
-                <ScrollView >
+                <ScrollView style={[{ width: '100%' }]}>
                     {constructTasks(rest)}
                 </ScrollView>
             </View>
             <View>
                 <TouchableOpacity onPress={() => setIsOpen(true)}>
-                    <FontAwesomeIcon icon={faPlusCircle} color={'green'} size={25} />
+                    <FontAwesomeIcon icon={faPlusCircle} color={'green'} size={40} />
                 </TouchableOpacity>
             </View>
             <NewTask
@@ -87,5 +90,15 @@ const styles = StyleSheet.create({
     center: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    taskText: {
+        fontSize: 15
+    },
+    taskContainer: {
+        width: '80%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        alignSelf: 'center'
     }
 });

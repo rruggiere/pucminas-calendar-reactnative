@@ -21,12 +21,16 @@ export default function Main() {
     return (
         <View style={styles.container}>
             <View style={styles.container}>
-                <Text>
+                <Text style={[{ fontWeight: 'bold', fontSize: 20 }]}>
                     BEM-VINDO A SUA AGENDA
                 </Text>
-                <View>
+                <View style={{ borderWidth: 3, borderRadius: 25, margin: 10 }}>
                     <CalendarPicker
-                        onDateChange={onChange}
+                        onDateChange={async (date: Date) => {
+                            onChange(date);
+                            const tasks = await GetLocalTasks(date);
+                            setTask(tasks);
+                        }}
                     />
                 </View>
             </View>
@@ -39,10 +43,10 @@ export default function Main() {
 }
 
 const styles = StyleSheet.create({
-    container: {      
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 15
+    container: {
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 15
     },
-  });
+});

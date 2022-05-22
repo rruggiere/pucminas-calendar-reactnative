@@ -30,7 +30,7 @@ export async function InsertValue(date: Date, task: Task) {
     let tasksValues;
 
     if (localResponse) {
-        localStorage.removeItem(key);
+        await AsyncStorage.removeItem(key);
         tasksValues = JSON.parse(localResponse);
         tasksValues.push(task);
     }
@@ -38,5 +38,5 @@ export async function InsertValue(date: Date, task: Task) {
         tasksValues = [task]
 
     if (tasksValues)
-        localStorage.setItem(key, JSON.stringify(tasksValues))
+        await AsyncStorage.setItem(key, JSON.stringify(tasksValues))
 }
