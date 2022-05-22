@@ -23,7 +23,7 @@ function constructTasks(props: Props) {
                         {task.text.toLocaleUpperCase() + " "}
                     </Text>
                     <View style={[{ flexDirection: 'row' }, styles.center]}>
-                        <View style={{marginRight: 10}}><FontAwesomeIcon size={13} icon={faClock} /></View>
+                        <View style={{ marginRight: 10 }}><FontAwesomeIcon size={13} icon={faClock} /></View>
                         <Text style={styles.taskText}>
                             {task.hour}:{task.minutes}
                         </Text>
@@ -60,14 +60,14 @@ export default function TasksList({ ...rest }: Props) {
     return (
         <View style={styles.container}>
             <View style={styles.center}>
-                <Text style={[{ fontSize: 15 , fontWeight: 'bold', marginBottom: 5 }]}>
+                <Text style={[{ fontSize: 15, fontWeight: 'bold', marginBottom: 5 }]}>
                     ATIVIDADES PARA {dataFormatada}
                 </Text>
                 <ScrollView style={[{ width: '100%' }]}>
                     {constructTasks(rest)}
                 </ScrollView>
             </View>
-            <View>
+            <View style={{ marginTop: 15 }}>
                 <TouchableOpacity onPress={() => setIsOpen(true)}>
                     <FontAwesomeIcon icon={faPlusCircle} color={'green'} size={40} />
                 </TouchableOpacity>
